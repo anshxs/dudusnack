@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Snack Expo Clone
+
+A web-based code editor inspired by Expo Snack, built with Next.js, Monaco Editor, and Tailwind CSS.
+
+## Features
+
+### ✅ Implemented
+- **Fixed Height Layout**: Full-screen application with proper layout
+- **Header**: Top navigation with branding and action buttons
+- **File Explorer**: VS Code-style file tree with:
+  - Create files and folders
+  - Nested folder structure
+  - File type icons
+  - Context menus
+- **Monaco Editor**: Professional code editor with:
+  - Syntax highlighting
+  - Auto-completion
+  - Multiple tabs
+  - Language detection based on file extensions
+  - Dark theme
+- **Preview Panel**: Preview section with:
+  - Web preview (iframe)
+  - Mobile device simulator
+  - Switch between preview modes
+  - Responsive device selection
+- **Resizable Panels**: Drag to resize different sections
+
+### 🚧 To Be Implemented
+- **GitHub Import**: Import projects from GitHub repositories
+- **Live Preview**: Real-time code execution and preview
+- **Project Runner**: Build and run projects
+- **Export/Share**: Export projects or generate shareable links
+- **File Upload**: Drag and drop file uploads
+- **Search**: Global search across files
+- **Settings**: User preferences and editor settings
+
+## Tech Stack
+
+- **Next.js 15**: React framework with App Router
+- **TypeScript**: Type-safe development
+- **Monaco Editor**: VS Code's editor (same engine as VS Code)
+- **Tailwind CSS**: Utility-first styling
+- **Radix UI**: Accessible UI components
+- **React Resizable Panels**: Resizable layout system
+- **Lucide React**: Modern icon library
 
 ## Getting Started
 
-First, run the development server:
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2. **Start Development Server**
+   ```bash
+   npm run dev
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. **Open Browser**
+   Visit `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Creating Files**: Click the "+" icon in the file explorer or use the context menu
+2. **Editing Code**: Click on any file to open it in the editor
+3. **Managing Tabs**: Switch between open files using tabs, close with the "×" button
+4. **Resizing Panels**: Drag the panel borders to adjust layout
+5. **Preview Modes**: Switch between web, mobile, and split view
 
-## Learn More
+## Architecture
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The application follows a component-based architecture with React hooks for state management, in-memory file system, and Monaco Editor integration.
 
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
