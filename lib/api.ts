@@ -1,6 +1,51 @@
 // API configuration and helper functions
-const FILE_SERVER_URL = 'http://localhost:3002';
-const EMULATOR_SERVER_URL = 'http://localhost:4000';
+const IP_CONFIG_URL = 'https://raw.githubusercontent.com/anshxs/configs/refs/heads/main/dudusnackip.txt';
+
+// Cache for IP address to avoid fetching on every request
+let cachedIP: string | null = null;
+let ipFetchPromise: Promise<string> | null = null;
+
+// Function to fetch IP address from GitHub
+async function fetchIPAddress(): Promise<string> {
+  if (cachedIP) {
+    return cachedIP;
+  }
+  
+  if (ipFetchPromise) {
+    return ipFetchPromise;
+  }
+  
+  ipFetchPromise = (async () => {
+    try {
+      const response = await fetch(IP_CONFIG_URL);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch IP: ${response.status}`);
+      }
+      const ip = (await response.text()).trim();
+      cachedIP = ip;
+      return ip;
+    } catch (error) {
+      console.error('Failed to fetch IP address, falling back to localhost:', error);
+      cachedIP = 'localhost';
+      return 'localhost';
+    } finally {
+      ipFetchPromise = null;
+    }
+  })();
+  
+  return ipFetchPromise;
+}
+
+// Dynamic URL builders
+async function getFileServerURL(): Promise<string> {
+  const ip = await fetchIPAddress();
+  return `http://${ip}:3002`;
+}
+
+async function getEmulatorServerURL(): Promise<string> {
+  const ip = await fetchIPAddress();
+  return `http://${ip}:4000`;
+}
 
 export interface ApiResponse<T = any> {
   success: boolean;
@@ -31,7 +76,8 @@ export const fileApi = {
   // Get all files from my-app directory
   async getFiles(): Promise<{ [key: string]: FileContent }> {
     try {
-      const response = await fetch(`${FILE_SERVER_URL}/api/get-files`);
+      const serverURL = await getFileServerURL();
+      const response = await fetch(`${serverURL}/api/get-files`);
       const data = await response.json();
       if (data.success) {
         return data.files || {};
@@ -48,9 +94,10 @@ export const fileApi = {
     try {
       console.log('API: Updating file:', filePath);
       console.log('API: Content length:', content.length);
-      console.log('API: Server URL:', `${FILE_SERVER_URL}/api/update-file`);
+      const serverURL = await getFileServerURL();
+      console.log('API: Server URL:', `${serverURL}/api/update-file`);
       
-      const response = await fetch(`${FILE_SERVER_URL}/api/update-file`, {
+      const response = await fetch(`${serverURL}/api/update-file`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ filePath, content })
@@ -79,7 +126,8 @@ export const fileApi = {
   // Add a new file
   async addFile(filePath: string, content: string = ''): Promise<void> {
     try {
-      const response = await fetch(`${FILE_SERVER_URL}/api/add-file`, {
+      const serverURL = await getFileServerURL();
+      const response = await fetch(`${serverURL}/api/add-file`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ filePath, content })
@@ -97,7 +145,8 @@ export const fileApi = {
   // Delete a file
   async deleteFile(filePath: string): Promise<void> {
     try {
-      const response = await fetch(`${FILE_SERVER_URL}/api/delete-file`, {
+      const serverURL = await getFileServerURL();
+      const response = await fetch(`${serverURL}/api/delete-file`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ filePath })
@@ -115,7 +164,8 @@ export const fileApi = {
   // Execute terminal command
   async executeCommand(command: string, background: boolean = false): Promise<any> {
     try {
-      const response = await fetch(`${FILE_SERVER_URL}/api/terminal`, {
+      const serverURL = await getFileServerURL();
+      const response = await fetch(`${serverURL}/api/terminal`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ command, background })
@@ -134,7 +184,8 @@ export const fileApi = {
   // Get running processes
   async getProcesses(): Promise<ProcessInfo[]> {
     try {
-      const response = await fetch(`${FILE_SERVER_URL}/api/processes`);
+      const serverURL = await getFileServerURL();
+      const response = await fetch(`${serverURL}/api/processes`);
       const data = await response.json();
       return data.processes || [];
     } catch (error) {
@@ -146,7 +197,8 @@ export const fileApi = {
   // Kill a process
   async killProcess(pid: string): Promise<void> {
     try {
-      const response = await fetch(`${FILE_SERVER_URL}/api/kill-process`, {
+      const serverURL = await getFileServerURL();
+      const response = await fetch(`${serverURL}/api/kill-process`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pid })
@@ -196,7 +248,8 @@ export const fileApi = {
   // Refresh project from boilerplate
   async refreshProject(): Promise<void> {
     try {
-      const response = await fetch(`${FILE_SERVER_URL}/api/refresh`, {
+      const serverURL = await getFileServerURL();
+      const response = await fetch(`${serverURL}/api/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -214,7 +267,8 @@ export const fileApi = {
   async testConnection(): Promise<boolean> {
     try {
       console.log('Testing backend connection...');
-      const response = await fetch(`${FILE_SERVER_URL}/api/health`, {
+      const serverURL = await getFileServerURL();
+      const response = await fetch(`${serverURL}/api/health`, {
         method: 'GET',
         signal: AbortSignal.timeout(5000)
       });
@@ -233,7 +287,8 @@ export const emulatorApi = {
   // Get available emulators
   async getEmulators(): Promise<string[]> {
     try {
-      const response = await fetch(`${EMULATOR_SERVER_URL}/emulators`);
+      const serverURL = await getEmulatorServerURL();
+      const response = await fetch(`${serverURL}/emulators`);
       const data: EmulatorInfo = await response.json();
       return data.emulators || [];
     } catch (error) {
@@ -245,7 +300,8 @@ export const emulatorApi = {
   // Start emulator and scrcpy
   async startEmulator(emulatorName: string): Promise<void> {
     try {
-      const response = await fetch(`${EMULATOR_SERVER_URL}/start`, {
+      const serverURL = await getEmulatorServerURL();
+      const response = await fetch(`${serverURL}/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ emulatorName })
@@ -263,7 +319,8 @@ export const emulatorApi = {
   // Stop emulator and scrcpy
   async stopEmulator(): Promise<void> {
     try {
-      const response = await fetch(`${EMULATOR_SERVER_URL}/stop`, {
+      const serverURL = await getEmulatorServerURL();
+      const response = await fetch(`${serverURL}/stop`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
