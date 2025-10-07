@@ -44,7 +44,7 @@ async function getFileServerURL(): Promise<string> {
 
 async function getEmulatorServerURL(): Promise<string> {
   const ip = await fetchIPAddress();
-  return `http://${ip}:4000`;
+  return `http://${ip}:8000`;
 }
 
 export interface ApiResponse<T = any> {
