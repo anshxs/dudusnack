@@ -2,6 +2,8 @@
 
 DuduSnack is a local Expo development workspace. It combines a browser based project editor, a file server, Android emulator controls, and a live emulator preview in one interface.
 
+<img width="1512" height="982" alt="Screenshot 2026-10-02 at 11 10 51" src="https://github.com/user-attachments/assets/4ecb0af9-9810-40ff-a9a3-c31f99d923a9" />
+
 Create an Expo project, edit and autosave its files, install its dependencies, start an Android emulator, and open the project on that emulator from the workspace.
 
 ## Features
