@@ -926,6 +926,17 @@ export default function Home() {
               <div className="relative min-h-0 min-w-0 flex-1 overflow-hidden">
                 <pre
                   className="pointer-events-none absolute inset-0 overflow-hidden p-0 font-mono text-[11px] leading-5 text-zinc-300"
+                  style={{
+                    fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+                    fontSize: "11px",
+                    fontWeight: 400,
+                    lineHeight: "20px",
+                    letterSpacing: "normal",
+                    fontKerning: "none",
+                    fontVariantLigatures: "none",
+                    whiteSpace: "pre",
+                    tabSize: 2,
+                  }}
                   ref={highlightRef}
                   aria-hidden="true"
                 >
@@ -933,7 +944,20 @@ export default function Home() {
                 </pre>
                 <textarea
                   className="absolute inset-0 z-10 block size-full resize-none overflow-auto bg-transparent p-0 font-mono text-[11px] leading-5 text-transparent caret-[#f40] outline-none selection:bg-orange-500/30"
+                  style={{
+                    fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+                    fontSize: "11px",
+                    fontWeight: 400,
+                    lineHeight: "20px",
+                    letterSpacing: "normal",
+                    fontKerning: "none",
+                    fontVariantLigatures: "none",
+                    whiteSpace: "pre",
+                    overflowWrap: "normal",
+                    tabSize: 2,
+                  }}
                   spellCheck={false}
+                  wrap="off"
                   aria-label={`Edit ${activePath}`}
                   value={activeContent}
                   onScroll={(event) => {
